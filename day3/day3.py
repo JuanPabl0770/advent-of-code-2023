@@ -11,12 +11,17 @@ def checkIfPart(start, end, row):
         print("")
         for j in range(boxStart[1], boxEnd[1] + 1):
             if(not matrix[i][j] == "." and not matrix[i][j].isdigit()):
+                enginePartNumber = ''.join(matrix[row][c] for c in range(start, end+1))
+                if( f"{i},{j}" not in partDic):
+                    partDic[f"{i},{j}"] = [int(enginePartNumber)]
+                else:
+                    partDic[f"{i},{j}"].append(int(enginePartNumber))
                 found =  True
             print(matrix[i][j], end=" ")
     
     return found
 
-with open('day3/input.txt', 'r') as file:
+with open('advent-of-code-2023/day3/input.txt', 'r') as file:
     lines = file.readlines()
 
 cols = len(lines[0].strip())
@@ -27,6 +32,8 @@ sumOfParts = 0
 print(f"cols: {cols}, rows: {rows}")
 
 matrix = [[line.strip() for line in lines[i]] for i in range(len(lines))]
+
+partDic = {}
 
 for row in range(rows):
     start = -1
@@ -48,4 +55,13 @@ for row in range(rows):
 
 
         
-print(f"rows {len(matrix)} cols {len(matrix[0])} Total Sum: {sumOfParts}")
+print(f"PART 1: rows {len(matrix)} cols {len(matrix[0])} Total Sum: {sumOfParts}")
+
+gearRatiosSum = 0
+
+for key in partDic.keys():
+    if(len(partDic.get(key)) >= 2):
+        #print(f"for char: {matrix[int(key.split(',')[0])][int(key.split(',')[1])]} at [{key.split(',')[0]}, {key.split(',')[1]}] values of: {partDic.get(key)[0]} {partDic.get(key)[1]}")
+        gearRatiosSum += partDic.get(key)[0] * partDic.get(key)[1]
+
+print(f"PART 2: Gear ratio sum = {gearRatiosSum}")
